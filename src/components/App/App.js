@@ -3,13 +3,15 @@ import './App.css';
 
 const App = () => {
   return (
-    <div className="container">
+    <div className='container'>
       <h3>Lista produktów</h3>
       <ul>
-        <li className="row">Patelnia, cena: 89,99zł</li>
+        <li data-testid='product' className='row'>
+          Patelnia, cena: 89,99zł
+        </li>
       </ul>
     </div>
   );
 };
 
-export { App };
+export default App;
