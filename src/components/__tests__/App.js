@@ -52,7 +52,7 @@ test('should render list with products', async () => {
 
   mockData.map((prod) => {
     expect(
-      screen.getByText(`${prod.name}, cena: ${prod.price}`)
+      screen.getByText(`${prod.name}, cena: ${prod.price.replace('.', ',')} zł`)
     ).toBeInTheDocument();
   });
 

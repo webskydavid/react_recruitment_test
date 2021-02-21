@@ -22,7 +22,7 @@ const App = () => {
           ? cart.map((product) => (
               <li key={product.pid} data-testid='product' className='row'>
                 <span>
-                  {product.name}, cena: {product.price}
+                  {product.name}, cena: {product.price.replace('.', ',')} zł
                 </span>
                 <div>+</div>
                 <div>-</div>
