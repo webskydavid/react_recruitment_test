@@ -5,6 +5,7 @@ import {
   cleanup,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -42,11 +43,12 @@ afterEach(() => {
 
 afterAll(() => server.close());
 
-test('should render list with products', async () => {
+test('render list with products', async () => {
   render(<App />);
 
   expect(screen.getByText(/lista produktów/i)).toBeInTheDocument();
   expect(screen.getByText(/pobieram listę/i)).toBeInTheDocument();
+  expect(screen.getByText(/Suma zamówienia: 0 zł/i)).toBeInTheDocument();
 
   await waitForElementToBeRemoved(() => screen.getByText(/pobieram listę/i));
 
@@ -55,6 +57,22 @@ test('should render list with products', async () => {
       screen.getByText(`${prod.name}, cena: ${prod.price.replace('.', ',')} zł`)
     ).toBeInTheDocument();
   });
+
+  const priceSum = `Suma zamówienia: ${
+    Number.parseInt(mockData[0].price) + Number.parseInt(mockData[1].price)
+  } zł`;
+
+  await waitFor(() =>
+    expect(screen.getByTestId('price_sum').textContent).toEqual(priceSum)
+  );
+
+  screen.debug();
+});
+
+test('change product amount', async () => {
+  render(<App />);
+
+  expect(screen.getByTestId('increment_1')).toBeInTheDocument();
 
   screen.debug();
 });
