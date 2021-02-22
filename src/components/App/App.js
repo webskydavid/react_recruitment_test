@@ -27,11 +27,14 @@ const App = () => {
         {cart.length
           ? cart.map((product) => (
               <li key={product.pid} data-testid='product' className='row'>
-                <span>
+                <span data-testid='name'>
                   {product.name}, cena: {product.price.replace('.', ',')} zł
                 </span>
-                <div>-</div>
-                <div>+</div>
+                <div data-testid='quantity'>
+                  <button data-testid='decrement'>-</button>
+                  <button data-testid='increment'>+</button>
+                  <span data-testid='amount'>Obecnie masz 1 szt. produktu</span>
+                </div>
               </li>
             ))
           : 'Pobieram listę'}
