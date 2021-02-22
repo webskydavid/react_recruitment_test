@@ -18,7 +18,7 @@ const mockData = [
     pid: '8e5e1248-c799-4937-9acc-2b3ab0e034ff',
     name: 'Patelnia',
     price: '89.99',
-    max: 2,
+    max: 4,
     min: 1,
   },
   {
@@ -61,7 +61,7 @@ test('render list with products', async () => {
   );
 
   const priceSum = `Suma zamówienia: ${
-    Number.parseInt(mockData[0].price) + Number.parseInt(mockData[1].price)
+    Number.parseFloat(mockData[0].price) + Number.parseFloat(mockData[1].price)
   } zł`;
 
   await waitFor(() =>
@@ -88,10 +88,21 @@ test('change quantity of first product', async () => {
   );
 
   fireEvent.click(getByTestId(quantity[0], 'increment'));
+  fireEvent.click(getByTestId(quantity[0], 'increment'));
   fireEvent.click(getByTestId(quantity[0], 'decrement'));
 
   expect(getByTestId(quantity[0], 'amount').textContent).toEqual(
     'Obecnie masz 3 szt. produktu'
+  );
+
+  const priceSum =
+    Number.parseFloat(mockData[0].price) * 3 +
+    Number.parseFloat(mockData[1].price);
+
+  await waitFor(() =>
+    expect(screen.getByTestId('price_sum').textContent).toEqual(
+      `Suma zamówienia: ${priceSum} zł`
+    )
   );
 
   screen.debug();
