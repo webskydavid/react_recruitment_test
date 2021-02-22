@@ -5,12 +5,10 @@ import {
   cleanup,
   render,
   screen,
-  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import App from '../App/App';
-import { servicesVersion } from 'typescript';
 
 const mockData = [
   {
@@ -36,10 +34,12 @@ const server = setupServer(
 );
 
 beforeAll(() => server.listen());
+
 afterEach(() => {
   server.resetHandlers();
   cleanup();
 });
+
 afterAll(() => server.close());
 
 test('should render list with products', async () => {
