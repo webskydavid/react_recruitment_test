@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Quantity from '../Quantity/Quantity';
 import './App.css';
 
 const priceSum = (data, sum) =>
@@ -48,28 +49,19 @@ const App = () => {
       <h3>Lista produktów</h3>
       <ul>
         {cart.length
-          ? cart.map((product) => (
-              <li key={product.pid} data-testid='product' className='row'>
+          ? cart.map(({ pid, min, max, name, isBlocked, price, quantity }) => (
+              <li key={pid} data-testid='product' className='row'>
                 <span data-testid='name'>
-                  {product.name}, cena: {product.price.replace('.', ',')} zł
+                  {name}, cena: {price.replace('.', ',')} zł
                 </span>
-                <div data-testid='quantity'>
-                  <button
-                    data-testid='decrement'
-                    onClick={() => setQuantity('decrement', product.pid)}
-                  >
-                    -
-                  </button>
-                  <button
-                    data-testid='increment'
-                    onClick={() => setQuantity('increment', product.pid)}
-                  >
-                    +
-                  </button>
-                  <span data-testid='amount'>
-                    Obecnie masz {product.quantity} szt. produktu
-                  </span>
-                </div>
+                <Quantity
+                  pid={pid}
+                  min={min}
+                  max={max}
+                  isBlocked={isBlocked}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                />
               </li>
             ))
           : 'Pobieram listę'}
