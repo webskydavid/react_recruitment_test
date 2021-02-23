@@ -25,8 +25,9 @@ const mockData = [
     pid: '993c12b2-e662-4af7-b0bc-fef5c1d47720',
     name: 'Garnek mały',
     price: '29.99',
-    max: 3,
+    max: 1,
     min: 1,
+    isBlocked: true,
   },
 ];
 
@@ -67,8 +68,6 @@ test('render list with products', async () => {
   await waitFor(() =>
     expect(screen.getByTestId('price_sum').textContent).toEqual(priceSum)
   );
-
-  screen.debug();
 });
 
 test('change quantity of first product', async () => {
@@ -104,6 +103,21 @@ test('change quantity of first product', async () => {
       `Suma zamówienia: ${priceSum} zł`
     )
   );
+});
 
-  screen.debug();
+test('change if increment and decrement disabled status', async () => {
+  render(<App />);
+  const quantity = await waitFor(() => screen.getAllByTestId('quantity'));
+
+  expect(getByTestId(quantity[0], 'decrement')).not.toHaveAttribute('disabled');
+  expect(getByTestId(quantity[0], 'increment')).not.toHaveAttribute('disabled');
+  expect(getByTestId(quantity[0], 'amount').textContent).toEqual(
+    'Obecnie masz 1 szt. produktu'
+  );
+
+  expect(getByTestId(quantity[1], 'decrement')).toHaveAttribute('disabled');
+  expect(getByTestId(quantity[1], 'increment')).toHaveAttribute('disabled');
+  expect(getByTestId(quantity[1], 'amount').textContent).toEqual(
+    'Obecnie masz 1 szt. produktu'
+  );
 });
