@@ -1,35 +1,78 @@
-import React from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { string, bool, number, func } from 'prop-types';
 
-const Quantity = ({ pid, min, max, isBlocked, quantity, setQuantity }) => {
+const useDebounce = (checkValue, time) => {
+  const [debounce, setDebounce] = useState(checkValue);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounce(checkValue);
+    }, time);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [checkValue]);
+
+  return debounce;
+};
+
+const Quantity = ({ pid, quantity, setQuantity, min, max, isBlocked }) => {
+  const [productQuantity, setProductQuantity] = useState(quantity);
+  const debounce = useDebounce(productQuantity, 500);
+
+  const checkProduct = async () => {
+    const response = await fetch('api/product/check', {
+      method: 'POST',
+      body: JSON.stringify({ pid, quantity: productQuantity }),
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      setQuantity(pid, productQuantity);
+    } else {
+      setQuantity(pid, min);
+      setProductQuantity(min);
+    }
+  };
+
+  useEffect(() => {
+    if (debounce !== quantity) {
+      checkProduct();
+    }
+  }, [debounce]);
+
   return (
     <div data-testid='quantity'>
       <button
         disabled={isBlocked ? true : false}
         data-testid='decrement'
-        onClick={() => setQuantity('decrement', pid)}
+        onClick={() => setProductQuantity((s) => s - 1)}
       >
         -
       </button>
       <button
         disabled={isBlocked ? true : false}
         data-testid='increment'
-        onClick={() => setQuantity('increment', pid)}
+        onClick={() => setProductQuantity((s) => s + 1)}
       >
         +
       </button>
-      <span data-testid='amount'>Obecnie masz {quantity} szt. produktu</span>
+      <span data-testid='amount'>
+        Obecnie masz {productQuantity} szt. produktu
+      </span>
     </div>
   );
 };
 
 Quantity.propTypes = {
   pid: string.isRequired,
-  min: number.isRequired,
-  max: number.isRequired,
   quantity: number.isRequired,
   setQuantity: func.isRequired,
   isBlocked: bool,
+  min: number,
+  max: number,
 };
 
-export default Quantity;
+export default memo(Quantity, (prev, next) => {
+  return prev.quantity === next.quantity;
+});
