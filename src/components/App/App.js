@@ -71,7 +71,7 @@ const App = () => {
   return (
     <div className='container'>
       <h3>Lista produktów</h3>
-      <ul>
+      <ul className='table'>
         {!state.loading
           ? state.cart.map(
               ({ pid, min, max, name, isBlocked, price, quantity }) => (
@@ -92,7 +92,9 @@ const App = () => {
             )
           : 'Pobieram listę'}
       </ul>
-      <span data-testid='price_sum'>Suma zamówienia: {state.sum} zł</span>
+      <span className='sum' data-testid='price_sum'>
+        Suma zamówienia: {state.sum} zł
+      </span>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { string, bool, number, func } from 'prop-types';
+import './Quantity.css';
 
 const useDebounce = (checkValue, time) => {
   const [debounce, setDebounce] = useState(checkValue);
@@ -44,6 +45,7 @@ const Quantity = ({ pid, quantity, setQuantity, min, max, isBlocked }) => {
   return (
     <div data-testid='quantity'>
       <button
+        className='decrement'
         disabled={isBlocked ? true : false}
         data-testid='decrement'
         onClick={() => setProductQuantity((s) => s - 1)}
@@ -51,13 +53,14 @@ const Quantity = ({ pid, quantity, setQuantity, min, max, isBlocked }) => {
         -
       </button>
       <button
+        className='increment'
         disabled={isBlocked ? true : false}
         data-testid='increment'
         onClick={() => setProductQuantity((s) => s + 1)}
       >
         +
       </button>
-      <span data-testid='amount'>
+      <span className='amount' data-testid='amount'>
         Obecnie masz {productQuantity} szt. produktu
       </span>
     </div>
